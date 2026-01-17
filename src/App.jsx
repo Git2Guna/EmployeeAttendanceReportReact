@@ -20,27 +20,25 @@ function App() {
   const [searchTerm, setSearchTerm] = useState("");
   const [fileKey, setFileKey] = useState(Date.now());
 
-  // Popup state
   const [popup, setPopup] = useState({ message: "", type: "", visible: false });
-
-  // Delete modal state
   const [deleteModal, setDeleteModal] = useState({ visible: false, empId: null });
 
-  // Load employees
+  /* ---------------- LOAD & SAVE ---------------- */
+
   useEffect(() => {
     const stored = JSON.parse(localStorage.getItem("employees"));
     if (stored) setEmployees(stored);
     setIsLoaded(true);
   }, []);
 
-  // Save employees
   useEffect(() => {
     if (isLoaded) {
       localStorage.setItem("employees", JSON.stringify(employees));
     }
   }, [employees, isLoaded]);
 
-  // Show popup function
+  /* ---------------- UTILITIES ---------------- */
+
   const showPopup = (message, type) => {
     setPopup({ message, type, visible: true });
     setTimeout(() => {
@@ -56,12 +54,15 @@ function App() {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
+
     const reader = new FileReader();
     reader.onloadend = () => {
       setFormData((prev) => ({ ...prev, profile: reader.result }));
     };
     reader.readAsDataURL(file);
   };
+
+  /* ---------------- SUBMIT ---------------- */
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -105,37 +106,45 @@ function App() {
     setFileKey(Date.now());
   };
 
+  /* ---------------- EDIT & DELETE ---------------- */
+
   const editEmployee = (emp) => {
     setFormData(emp);
     setEditingId(emp.id);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // Open delete modal
   const openDeleteModal = (id) => {
     setDeleteModal({ visible: true, empId: id });
   };
 
-  // Confirm delete
   const confirmDelete = () => {
-    const id = deleteModal.empId;
-    setEmployees((prev) => prev.filter((emp) => emp.id.toString() !== id.toString()));
+    setEmployees((prev) =>
+      prev.filter((emp) => emp.id.toString() !== deleteModal.empId.toString())
+    );
     setDeleteModal({ visible: false, empId: null });
     showPopup("Employee deleted successfully", "delete");
   };
 
-  // Cancel delete
   const cancelDelete = () => {
     setDeleteModal({ visible: false, empId: null });
   };
 
-  const filteredEmployees = employees.filter(
-    (emp) =>
-      emp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      emp.id.toString().includes(searchTerm) ||
-      emp.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      emp.gender.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  /* ---------------- SEARCH FILTER (FIXED) ---------------- */
+
+  const filteredEmployees = employees.filter((emp) => {
+    const search = searchTerm.trim().toLowerCase();
+
+    return (
+      emp.name.toLowerCase().includes(search) ||
+      emp.id.toString().includes(search) ||
+      emp.department.toLowerCase().includes(search) ||
+      emp.gender.toLowerCase().includes(search) ||
+      emp.attendance.toLowerCase().includes(search)
+    );
+  });
+
+  /* ---------------- UI ---------------- */
 
   return (
     <div className="app-wrapper">
@@ -219,7 +228,7 @@ function App() {
         <div className="section">
           <div className="search-box">
             <input
-              placeholder="Search by Name, ID, Department, Gender"
+              placeholder="Search by Name, ID, Department, Gender, Attendance"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -286,7 +295,7 @@ function App() {
                     <img
                       src={unemploymentImg}
                       alt="No employees"
-                      style={{ width: "150px", height: "150px", objectFit: "contain" }}
+                      style={{ width: "150px", height: "150px" }}
                     />
                   </td>
                 </tr>
@@ -296,12 +305,10 @@ function App() {
         </div>
       </div>
 
-      {/* Popup */}
       {popup.visible && (
         <div className={`popup-message ${popup.type}`}>{popup.message}</div>
       )}
 
-      {/* DELETE MODAL */}
       {deleteModal.visible && (
         <div className="modal-overlay">
           <div className="modal-content">
