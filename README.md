@@ -14,3 +14,37 @@ The React Compiler is not enabled on this template because of its impact on dev 
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+
+# 👨‍💼 Employee Attendance Report App
+
+A **React-based Employee Attendance Management Application** that allows users to add, update, search, and delete employee records. The app stores data locally using **localStorage**, supports profile image uploads, and provides a clean, interactive UI with real-time feedback.
+
+---
+
+## ✨ Features
+
+- ➕ Add employee details with profile image
+- ✏️ Edit existing employee records
+- 🗑️ Delete employees with confirmation modal
+- 🔍 Search employees by ID, name, department, gender, or attendance
+- 🖼️ Upload and display profile images
+- 💾 Persistent data using browser localStorage
+- ⚠️ Error handling for invalid inputs
+- 📱 Responsive and user-friendly UI
+
+---
+
+## 🛠️ Tech Stack
+
+- ⚛️ **React**
+  - Functional Components
+  - Hooks (`useState`, `useEffect`)
+- 🎨 **CSS**
+  - Custom styling
+  - Responsive layout
+- 📦 **LocalStorage**
+  - Persistent data storage
+- 🎯 **React Icons**
+  - Edit & delete action icons
+
